@@ -1,0 +1,42 @@
+Setup root dir as git repo
+
+Pre-Req:
+  git client
+    yum -y install git
+  ssh-key (go big on the bit count)
+    ssh-keygen -t rsa -b 4096 -C user@machine.tld
+    note the fingerprint, e.g.: f7:c8:0e:c5:20:3b:2b:09:af:cf:e8:af:c9:58:af:c3 user@machine.tld
+  ssh public key stored in github acct (Profile | Settings | SSH and GPG keys)
+    source: ~/.ssh/id_rsa.pub
+    help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
+  Repo exists in github
+    Required before git push to avoid:
+      ERROR: Repository not found.
+      fatal: The remote end hung up unexpectedly
+    Not required: "Initialize this repository with a README"
+
+
+Steps:
+  Create local repo:
+    Select and initialize the repo dir:
+      cd /
+      git init
+  Add the URL for the remote repository to .git/config:
+    git remote add origin ssh://git@github.com/acct_name/project_name.git
+      DO NOT USE:
+          https://github.com/acct_name/project_name.git for the address
+            due to ERROR:
+              github 403 forbidden info/refs
+              SEE: stackoverflow.com/questions/7438313/pushing-to-git-returning-error-code-403-fatal-http-request-failed
+      REF: help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line/
+  Create, add and commit README
+    vi README.md
+    git add README.md
+    git commit -m "initial commit"
+
+Update remote repo:
+  git push -u origin master
+    (u: set upstream - recommended by:
+        github, on post repo creation page
+        but not on help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line/)
+
